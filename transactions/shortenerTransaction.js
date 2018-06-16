@@ -80,6 +80,11 @@ module.exports.PostUrlShortenerBulk = function (db, model, callback) {
                 resultCallback.transactionDone = true;
                 resultCallback.internalError = false;
                 resultCallback.url_bulk = bulk;
+
+                for (var i = 0; i < resultCallback.url_bulk.length; i++) {
+                    resultCallback.url_bulk[i].url_short = config.url + resultCallback.url_bulk[i].url_short;
+                }
+
                 callback(resultCallback);
                 return;
             }
