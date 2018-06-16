@@ -143,6 +143,7 @@ module.exports.GetAllUrl = function (db, callback) {
                 for (var i = 0; i < r.content.length; i++) {
                     delete r.content[i]._id;
                     delete r.content[i].create_date;
+                    r.content[i].url_short = config.url + r.content[i].url_short;
                 }
                 resultCallback.documents = r.content;
                 callback(resultCallback);
