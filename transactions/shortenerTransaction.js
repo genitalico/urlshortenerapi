@@ -99,6 +99,37 @@ module.exports.PostUrlShortenerBulk = function (db, model, callback) {
     }
 }
 
+module.exports.GetFindUrlShort = function (db, urlShort, callback) {
+    var resultCallback = {
+        transactionDone: false,
+        internalError: false
+    }
+
+    try {
+        helperTransaction.FindDocumentUlrShort(db, urlShort, function (r) {
+            if (r.result) {
+                resultCallback.transactionDone = true;
+                resultCallback.internalError = false;
+                resultCallback.url = r.content.url;
+                callback(resultCallback);
+                return;
+            }
+            else {
+                resultCallback.transactionDone = true;
+                resultCallback.internalError = true;
+                callback(resultCallback);
+                return;
+            }
+        });
+    }
+    catch (err) {
+        resultCallback.transactionDone = false;
+        resultCallback.internalError = true;
+        callback(resultCallback);
+        return;
+    }
+}
+
 var Random = function (size) {
 
     let text = "";
