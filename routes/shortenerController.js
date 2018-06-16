@@ -104,4 +104,38 @@ router.post('/urlbulk', function (req, res, next) {
 
 });
 
+router.get('/urlall', function (req, res, next) {
+    var db = req.db;
+    res.contentType("application/json");
+
+    transactions.GetAllUrl(db, function (result) {
+        if (result.internalError) {
+            var Ok = {};
+            Ok = messageResponse.OkReponse(messageResponse.InternalError());
+            res.status(Ok.statusCode);
+            res.json(Ok.body);
+            return;
+        }
+
+        if (!result.transactionDone) {
+            var Ok = {};
+            Ok = messageResponse.OkReponse(messageResponse.RegisterNotFound());
+            res.status(Ok.statusCode);
+            res.json(Ok.body);
+            return;
+        }
+
+        if (result.transactionDone) {
+            var Ok = {};
+            Ok = messageResponse.OkReponse(messageResponse.Correct());
+            Ok.body.content = {
+                urls: result.documents
+            };
+            res.status(200);
+            res.json(Ok.body);
+            return;
+        }
+    });
+});
+
 module.exports = router;

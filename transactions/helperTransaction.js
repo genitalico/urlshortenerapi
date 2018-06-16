@@ -95,4 +95,39 @@ var InsertManyDocument = function (db, model, callback) {
     }
 }
 
-module.exports = { InsertOneDocument, FindDocumentUlrShort, InsertManyDocument }
+var FindAll = function (db, callback) {
+    let result = {
+        content: {},
+        result: false
+    };
+    try {
+        let cursor = db.collection(config.collectionName1).find();
+
+        cursor.toArray(function (err, documents) {
+            if (err) {
+                result.result = false;
+                callback(result);
+                return;
+            }
+            if (documents.length > 0) {
+                result.content = documents;
+                result.result = true;
+                callback(result);
+                return;
+            }
+            else {
+                result.result = false;
+                callback(result);
+                return;
+            }
+        });
+    }
+    catch (err) {
+        result.content = null;
+        result.result = false;
+        callback(result);
+        return;
+    }
+}
+
+module.exports = { InsertOneDocument, FindDocumentUlrShort, InsertManyDocument, FindAll }

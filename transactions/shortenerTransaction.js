@@ -130,6 +130,40 @@ module.exports.GetFindUrlShort = function (db, urlShort, callback) {
     }
 }
 
+module.exports.GetAllUrl = function (db, callback) {
+    var resultCallback = {
+        transactionDone: false,
+        internalError: false
+    }
+    try {
+        helperTransaction.FindAll(db, function (r) {
+            if (r.result) {
+                resultCallback.transactionDone = true;
+                resultCallback.internalError = false;
+                for (var i = 0; i < r.content.length; i++) {
+                    delete r.content[i]._id;
+                    delete r.content[i].create_date;
+                }
+                resultCallback.documents = r.content;
+                callback(resultCallback);
+                return;
+            }
+            else {
+                resultCallback.transactionDone = true;
+                resultCallback.internalError = true;
+                callback(resultCallback);
+                return;
+            }
+        });
+    }
+    catch (err) {
+        resultCallback.transactionDone = false;
+        resultCallback.internalError = true;
+        callback(resultCallback);
+        return;
+    }
+}
+
 var Random = function (size) {
 
     let text = "";
