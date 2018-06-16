@@ -67,4 +67,32 @@ var FindDocumentUlrShort = function (db, urlShort, callback) {
     }
 }
 
-module.exports = { InsertOneDocument, FindDocumentUlrShort }
+var InsertManyDocument = function (db, model, callback) {
+    let result = {
+        content: {},
+        result: false
+    };
+    try {
+
+        db.collection(config.collectionName1).insertMany(model, function (err, r) {
+            if (err) {
+                result.result = false;
+                callback(result);
+                return;
+            }
+            else {
+                result.result = true;
+                callback(result);
+                return;
+            }
+        });
+    }
+    catch (err) {
+        result.content = null;
+        result.result = false;
+        callback(result);
+        return;
+    }
+}
+
+module.exports = { InsertOneDocument, FindDocumentUlrShort, InsertManyDocument }

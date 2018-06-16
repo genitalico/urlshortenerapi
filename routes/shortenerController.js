@@ -54,4 +54,54 @@ router.post('/url', function (req, res, next) {
     });
 });
 
+router.post('/urlbulk', function (req, res, next) {
+    var model = req.body;
+    var db = req.db;
+    res.contentType("application/json");
+
+    joi.validate(model, models.UrlShortenerBulkModel, function (err, validModel) {
+        if (err) {
+            var Ok = {};
+            Ok = messageResponse.OkReponse(messageResponse.InvalidModel());
+            err.details.forEach(function (v, i) {
+                Ok.body.messages.push(v.message.split("\"").join(""));
+            });
+            res.status(Ok.statusCode);
+            res.json(Ok.body);
+            return;
+        }
+        else {
+            transactions.PostUrlShortenerBulk(db, validModel, function (result) {
+                if (result.internalError) {
+                    var Ok = {};
+                    Ok = messageResponse.OkReponse(messageResponse.InternalError());
+                    res.status(Ok.statusCode);
+                    res.json(Ok.body);
+                    return;
+                }
+
+                if (!result.transactionDone) {
+                    var Ok = {};
+                    Ok = messageResponse.OkReponse(messageResponse.RegisterNotFound());
+                    res.status(Ok.statusCode);
+                    res.json(Ok.body);
+                    return;
+                }
+
+                if (result.transactionDone) {
+                    var Ok = {};
+                    Ok = messageResponse.OkReponse(messageResponse.Correct());
+                    Ok.body.content = {
+                        url_bulk: result.url_bulk
+                    };
+                    res.status(200);
+                    res.json(Ok.body);
+                    return;
+                }
+            })
+        }
+    });
+
+});
+
 module.exports = router;

@@ -9,3 +9,7 @@ module.exports.ShortenerModel = function () {
     this.url_short = '';
     this.create_date = new Date()
 }
+
+module.exports.UrlShortenerBulkModel = joi.object().keys({
+    url_bulk: joi.array().items(joi.string().required()).required()
+});
