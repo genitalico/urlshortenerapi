@@ -26,8 +26,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(connection.cn(app, {}));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/api/shortener', shortenerController);
 
 // catch 404 and forward to error handler
