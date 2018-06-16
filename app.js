@@ -14,7 +14,7 @@ var app = express();
 var connection = require('./mongodb/connection');
 
 // view engine setup
-//app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 if (process.env.NODE_ENV != "production" || process.env.NODE_ENV != "staging") {
