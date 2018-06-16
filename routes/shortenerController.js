@@ -42,6 +42,9 @@ router.post('/url', function (req, res, next) {
                 if (result.transactionDone) {
                     var Ok = {};
                     Ok = messageResponse.OkReponse(messageResponse.Correct());
+                    Ok.body.content = {
+                        url_shorter: result.url_short
+                    };
                     res.status(200);
                     res.json(Ok.body);
                     return;
