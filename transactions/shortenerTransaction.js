@@ -54,8 +54,3 @@ var Random = function (size) {
 
     return text;
 }
-
-var Insert = function () {
-
-
-}
